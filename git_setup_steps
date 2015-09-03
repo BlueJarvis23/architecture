@@ -1,0 +1,6 @@
+git init
+git remote add origin https://github.com/BlueJarvis23/architecture.git
+git pull origin master
+git checkout --orphan <branch_name>
+git commit
+git push origin <branch_name>
