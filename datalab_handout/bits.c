@@ -140,7 +140,8 @@ NOTES:
  *   Rating: 1
  */
 int bitNor(int x, int y) {
-  return 2;
+  // DeMorgan's Law: ~(x|y) == ~x & ~y
+  return (~x) & (~y);
 }
 
 /* 
@@ -151,7 +152,8 @@ int bitNor(int x, int y) {
  *   Rating: 2
  */
 int bitXor(int x, int y) {
-  return 2;
+  // x^y == x&~y | ~x&y == ~(~(x&~y) & ~(~x&y))  
+  return ~(~(x&~y) & ~(~x&y));
 }
 /* 
  * isNotEqual - return 0 if x == y, and 1 otherwise 
@@ -161,7 +163,7 @@ int bitXor(int x, int y) {
  *   Rating: 2
  */
 int isNotEqual(int x, int y) {
-  return 2;
+  return !!(x^y);
 }
 /* 
  * getByte - Extract byte n from word x
@@ -172,7 +174,9 @@ int isNotEqual(int x, int y) {
  *   Rating: 2
  */
 int getByte(int x, int n) {
-  return 2;
+  unsigned char num_bits = n * 8;
+  //return (x << (24-num_bits)) >> (num_bits + (24-num_bits)) & 0xFF;
+  return (x >> num_bits) & 0xFF;
 }
 /* 
  * copyLSB - set all bits of result to least significant bit of x
@@ -182,7 +186,8 @@ int getByte(int x, int n) {
  *   Rating: 2
  */
 int copyLSB(int x) {
-  return 2;
+  // Take advantage of arithmatic shift
+  return (x << 31) >> 31;
 }
 /* 
  * logicalShift - shift x to the right by n, using a logical shift
@@ -193,7 +198,8 @@ int copyLSB(int x) {
  *   Rating: 3 
  */
 int logicalShift(int x, int n) {
-  return 2;
+  //return ((x >> 1) & ~(0x7FFFFFFF)) >> (n-1);
+  return ((x >> 1) & ~(0x1 << 31)) >> ~(~n+1);
 }
 /*
  * bitCount - returns count of number of 1's in word
@@ -203,7 +209,12 @@ int logicalShift(int x, int n) {
  *   Rating: 4
  */
 int bitCount(int x) {
-  return 2;
+  // used hamming weight previously in side channel attack of DES algorithm
+  x = ~(~x + ((x >> 1) & (0x55 | (0x55 << 8) | (0x55 << 16) | 0x55 << 24))); // 11
+  int threes = (0x33 | (0x33 << 8) | (0x33 << 16) | (0x33 << 24)); // 6
+  x = (x & threes) + ((x >> 2) & threes); // 4
+  x = ((x + (x >> 4)) & (0xF | (0xF << 8) | (0xF << 16) | (0xF << 24))); // 9
+  return (x + (x >> 8) + (x >> 16) + (x >> 24)) & 0xFF; // 7
 }
 /* 
  * bang - Compute !x without using !
@@ -213,7 +224,12 @@ int bitCount(int x) {
  *   Rating: 4 
  */
 int bang(int x) {
-  return 2;
+  //TODO: have 14 ops
+  unsigned char byte = x | (x >> 8) | (x >> 16) | (x >> 24);
+  unsigned char nibble = byte | (byte >> 4);
+  unsigned char half_nibble = nibble | (nibble >> 2);
+  return (~(half_nibble | (half_nibble >> 1))) & 0x1;
+  //return low_char | (low_char >> 2) | (low_char >> 4) | (low_char >> 6) & 0x1;
 }
 /* 
  * leastBitPos - return a mask that marks the position of the
@@ -224,7 +240,11 @@ int bang(int x) {
  *   Rating: 4 
  */
 int leastBitPos(int x) {
-  return 2;
+  // invert x and +1 to locate first 1
+  // invert again to return to correct sign
+  // xor with original value to mast higher bits
+  // and with self to recover lower bits.
+  return (~(~x + 1) ^ x) & x;
 }
 /* 
  * TMax - return maximum two's complement integer 
@@ -233,7 +253,7 @@ int leastBitPos(int x) {
  *   Rating: 1
  */
 int tmax(void) {
-  return 2;
+  return ~(0x1 << 31);
 }
 /* 
  * isNonNegative - return 1 if x >= 0, return 0 otherwise 
@@ -243,7 +263,7 @@ int tmax(void) {
  *   Rating: 3
  */
 int isNonNegative(int x) {
-  return 2;
+  return !((x >> 31) & 0x1);
 }
 /* 
  * isGreater - if x > y  then return 1, else return 0 
@@ -253,7 +273,9 @@ int isNonNegative(int x) {
  *   Rating: 3
  */
 int isGreater(int x, int y) {
-  return 2;
+  //return x > y ? 1 : 0;
+  //return (((x + (x >> 31)) ^ (x >> 31)) + ~((y + (y >> 31)) ^ (y >> 31))) >> 31;
+  return !!(((x + ~y)) >> 31);
 }
 /* 
  * divpwr2 - Compute x/(2^n), for 0 <= n <= 30
@@ -264,7 +286,20 @@ int isGreater(int x, int y) {
  *   Rating: 2
  */
 int divpwr2(int x, int n) {
-    return 2;
+    int sign = x >> 31;
+    printf("sign %d\n", sign);
+    int result = ((x + (x >> 31)) ^ (x >> 31));
+    int sign_result = result >> 31;
+    printf("abs %d\n", result);
+    result = ((result >> 1) & ~(0x1 << 31)) >> ~(~n+1);
+    // result >>= n;
+    printf("shift %d\n", result);
+    result ^= sign;
+    printf("xor %d\n", result);
+    result = result + !!(sign);
+    printf("plus1 %d\n", result);
+    return result;
+    return sign_result&sign?~result+1:result;
 }
 /* 
  * abs - absolute value of x (except returns TMin for TMin)
@@ -274,7 +309,7 @@ int divpwr2(int x, int n) {
  *   Rating: 4
  */
 int abs(int x) {
-  return 2;
+  return (x + (x >> 31)) ^ (x >> 31);
 }
 /* 
  * addOK - Determine if can compute x+y without overflow
@@ -285,5 +320,8 @@ int abs(int x) {
  *   Rating: 3
  */
 int addOK(int x, int y) {
-  return 2;
+  // If sign of x and y is different then addition is always possible.
+  // If sign of sum different than sign of x then 0 else 1
+  int sum_sign = !!((x+y) >> 31);
+  return (!!((x>>31) ^ (y>>31)) | !((sum_sign ^ !!(x>>31))));
 }
