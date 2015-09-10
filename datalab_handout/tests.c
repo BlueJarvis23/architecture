@@ -1,6 +1,8 @@
 /* Testing Code */
 
-#include <limits.h>
+//#include <limits.h>
+#define LONG_MAX 0x7FFFFFFFL
+
 int test_bitNor(int x, int y)
 {
   return ~(x|y);

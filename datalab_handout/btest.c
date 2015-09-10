@@ -25,7 +25,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-#include <limits.h>
+//#include <limits.h>
 #include "btest.h"
 
 /* Globals defined in other modules */

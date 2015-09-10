@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
+//#include <limits.h>
 
-#define TMin LONG_MIN
-#define TMax LONG_MAX
+//#define TMin LONG_MIN
+//#define TMax LONG_MAX
+#define TMin 0x80000000L
+#define TMax 0x7FFFFFFFL
 
 #include "btest.h"
 #include "bits.h"

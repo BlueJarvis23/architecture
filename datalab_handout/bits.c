@@ -12,7 +12,7 @@
  */
 
 #include "btest.h"
-#include <limits.h>
+//#include <limits.h>
 
 /*
  * Instructions to Students:
@@ -273,9 +273,14 @@ int isNonNegative(int x) {
  *   Rating: 3
  */
 int isGreater(int x, int y) {
+  int different = ((x>>31)^(y>>31)); // eg different 0x1111
+  return !((x >> 31) & different) | !(((x + ~y) >> 31) ^ (x>>31));
+  //return !((x >> 31) & different) | !((y >> 31) & different) | (((x + ~y) >> 31) ^ (x>>31));
+  //          same sign                                        +x > +y         +x < +y       -x > -y       -x < -y
+
   //return x > y ? 1 : 0;
   //return (((x + (x >> 31)) ^ (x >> 31)) + ~((y + (y >> 31)) ^ (y >> 31))) >> 31;
-  return !!(((x + ~y)) >> 31);
+  //return !!(((x + ~y)) >> 31);
 }
 /* 
  * divpwr2 - Compute x/(2^n), for 0 <= n <= 30
@@ -286,20 +291,23 @@ int isGreater(int x, int y) {
  *   Rating: 2
  */
 int divpwr2(int x, int n) {
-    int sign = x >> 31;
-    printf("sign %d\n", sign);
-    int result = ((x + (x >> 31)) ^ (x >> 31));
-    int sign_result = result >> 31;
-    printf("abs %d\n", result);
-    result = ((result >> 1) & ~(0x1 << 31)) >> ~(~n+1);
-    // result >>= n;
-    printf("shift %d\n", result);
-    result ^= sign;
-    printf("xor %d\n", result);
-    result = result + !!(sign);
-    printf("plus1 %d\n", result);
-    return result;
-    return sign_result&sign?~result+1:result;
+    return 2;
+
+//    int sign = x >> 31;
+//    printf("sign %d\n", sign);
+//    int result = ((x + (x >> 31)) ^ (x >> 31));
+//    int sign_result = result >> 31;
+//    printf("abs %d\n", result);
+//    result = ((result >> 1) & ~(0x1 << 31)) >> ~(~n+1);
+//    result = result << !n;
+//    // result >>= n;
+//    printf("shift %d\n", result);
+//    result ^= sign;
+//    printf("xor %d\n", result);
+//    result = result + !!(sign);
+//    printf("plus1 %d\n", result);
+//    return result;
+//    return sign_result&sign?~result+1:result;
 }
 /* 
  * abs - absolute value of x (except returns TMin for TMin)
