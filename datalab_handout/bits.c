@@ -163,6 +163,7 @@ int bitXor(int x, int y) {
  *   Rating: 2
  */
 int isNotEqual(int x, int y) {
+  // If x and y are equal then xor will give 0
   return !!(x^y);
 }
 /* 
@@ -174,9 +175,8 @@ int isNotEqual(int x, int y) {
  *   Rating: 2
  */
 int getByte(int x, int n) {
-  unsigned char num_bits = n * 8;
-  //return (x << (24-num_bits)) >> (num_bits + (24-num_bits)) & 0xFF;
-  return (x >> num_bits) & 0xFF;
+  // Multiply n by 8 and mask single byte 
+  return (x >> (n << 3)) & 0xFF;
 }
 /* 
  * copyLSB - set all bits of result to least significant bit of x
@@ -210,6 +210,8 @@ int logicalShift(int x, int n) {
  */
 int bitCount(int x) {
   // used hamming weight previously in side channel attack of DES algorithm
+  // sum byte wise then add each byte's value and mask
+  // using threes to store constructed value
   x = ~(~x + ((x >> 1) & (0x55 | (0x55 << 8) | (0x55 << 16) | 0x55 << 24))); // 11
   int threes = (0x33 | (0x33 << 8) | (0x33 << 16) | (0x33 << 24)); // 6
   x = (x & threes) + ((x >> 2) & threes); // 4
@@ -224,12 +226,13 @@ int bitCount(int x) {
  *   Rating: 4 
  */
 int bang(int x) {
-  //TODO: have 14 ops
-  unsigned char byte = x | (x >> 8) | (x >> 16) | (x >> 24);
-  unsigned char nibble = byte | (byte >> 4);
-  unsigned char half_nibble = nibble | (nibble >> 2);
-  return (~(half_nibble | (half_nibble >> 1))) & 0x1;
-  //return low_char | (low_char >> 2) | (low_char >> 4) | (low_char >> 6) & 0x1;
+  // fold x in half over and over so that if there is a one anywhere
+  // it will be moved into the first bit position
+  x |= (x >> 16);
+  x |= (x >> 8);
+  x |= (x >> 4);
+  x |= (x >> 2);
+  return (~(x | (x >> 1))) & 0x1;
 }
 /* 
  * leastBitPos - return a mask that marks the position of the
@@ -253,6 +256,7 @@ int leastBitPos(int x) {
  *   Rating: 1
  */
 int tmax(void) {
+  // shift 1 to last bit and invert
   return ~(0x1 << 31);
 }
 /* 
@@ -263,6 +267,7 @@ int tmax(void) {
  *   Rating: 3
  */
 int isNonNegative(int x) {
+  // check highest bit to see if number is negative
   return !((x >> 31) & 0x1);
 }
 /* 
@@ -273,14 +278,11 @@ int isNonNegative(int x) {
  *   Rating: 3
  */
 int isGreater(int x, int y) {
-  int different = ((x>>31)^(y>>31)); // eg different 0x1111
-  return !((x >> 31) & different) | !(((x + ~y) >> 31) ^ (x>>31));
-  //return !((x >> 31) & different) | !((y >> 31) & different) | (((x + ~y) >> 31) ^ (x>>31));
-  //          same sign                                        +x > +y         +x < +y       -x > -y       -x < -y
-
-  //return x > y ? 1 : 0;
-  //return (((x + (x >> 31)) ^ (x >> 31)) + ~((y + (y >> 31)) ^ (y >> 31))) >> 31;
-  //return !!(((x + ~y)) >> 31);
+  // checks the cases for greater else return 0
+  int sign1 = x >> 31;
+  int sign2 = y >> 31;
+  int diff = !((x + ~y) >> 31);    
+  return ((!sign1) & sign2) | ((!sign1) & (!sign2) & diff) | (sign1 & sign2 & diff);
 }
 /* 
  * divpwr2 - Compute x/(2^n), for 0 <= n <= 30
@@ -291,23 +293,10 @@ int isGreater(int x, int y) {
  *   Rating: 2
  */
 int divpwr2(int x, int n) {
-    return 2;
-
-//    int sign = x >> 31;
-//    printf("sign %d\n", sign);
-//    int result = ((x + (x >> 31)) ^ (x >> 31));
-//    int sign_result = result >> 31;
-//    printf("abs %d\n", result);
-//    result = ((result >> 1) & ~(0x1 << 31)) >> ~(~n+1);
-//    result = result << !n;
-//    // result >>= n;
-//    printf("shift %d\n", result);
-//    result ^= sign;
-//    printf("xor %d\n", result);
-//    result = result + !!(sign);
-//    printf("plus1 %d\n", result);
-//    return result;
-//    return sign_result&sign?~result+1:result;
+    // positive works without problem
+    // negative needs to see if there was ever a 1 and that shifted off
+    // if so add 1
+    return (x >> n) + ((!!(x & ~(~0x0 << n))) & (x >> 31));
 }
 /* 
  * abs - absolute value of x (except returns TMin for TMin)
@@ -317,6 +306,7 @@ int divpwr2(int x, int n) {
  *   Rating: 4
  */
 int abs(int x) {
+  // add the sign and invert if negative
   return (x + (x >> 31)) ^ (x >> 31);
 }
 /* 
