@@ -1,5 +1,6 @@
 break explode_bomb
   commands
+    kill
     quit
   end
 break phase_2
