@@ -1,0 +1,133 @@
+/lib64/ld-linux-x86-64.so.2
+__gmon_start__
+libc.so.6
+socket
+cuserid
+fflush
+strcpy
+exit
+sprintf
+fopen
+__isoc99_sscanf
+connect
+signal
+puts
+stdin
+rewind
+strtol
+fgets
+tmpfile
+stdout
+fputc
+fclose
+strcasecmp
+getenv
+__ctype_b_loc
+system
+gethostbyname
+gethostname
+fwrite
+bcopy
+fprintf
+sleep
+__libc_start_main
+GLIBC_2.3
+GLIBC_2.7
+GLIBC_2.2.5
+=x% 
+fff.
+\$ H
+l$(L
+d$0H
+ATUSH
+[]A\
+AUATUSH
+nobof
+h[]A\A]
+d$ H
+fffff.
+l$ L
+t$(L
+|$0H
+%s: Error: Couldn't open %s
+Usage: %s [<input_file>]
+That's number 2.  Keep going!
+Halfway there!
+Good work!  On to the next...
+Welcome to my fiendish little bomb. You have 6 phases with
+which to blow yourself up. Have a nice day!
+Phase 1 defused. How about the next one?
+So you got that one.  Try this one.
+Wow! You've defused the secret stage!
+Verbosity leads to unclear, inarticulate things.
+ERROR: dup(0) error
+ERROR: close error
+ERROR: tmpfile error
+Subject: Bomb notification
+exploded
+defused
+bomb-header:%s:%d:%s:%s:%d
+bomb-string:%s:%d:%s:%d:%s
+vlsi-59.engr.usu.edu
+bomb
+/usr/sbin/sendmail -bm
+%s %s@%s
+ERROR: notification error
+ERROR: fclose(tmp) error
+ERROR: dup(tmpstdin) error
+ERROR: close(tmpstdin)
+%d %s
+dnoBsemaJ700
+BOOM!!!
+The bomb has blown up.
+%d %d %d %d %d %d
+Error: Premature EOF on stdin
+GRADE_BOMB
+Error: Input line too long
+Invalid phase%s
+Well...
+OK. :-)
+Bad host (1).
+Bad host (2).
+Bad host (3).
+Bad host (4)
+www.yahoo.com
+Bad host (5).
+vlsi-01.engr.usu.edu
+vlsi-02.engr.usu.edu
+vlsi-03.engr.usu.edu
+vlsi-04.engr.usu.edu
+vlsi-05.engr.usu.edu
+vlsi-06.engr.usu.edu
+vlsi-07.engr.usu.edu
+vlsi-08.engr.usu.edu
+vlsi-09.engr.usu.edu
+vlsi-10.engr.usu.edu
+vlsi-11.engr.usu.edu
+vlsi-12.engr.usu.edu
+vlsi-13.engr.usu.edu
+vlsi-14.engr.usu.edu
+vlsi-15.engr.usu.edu
+vlsi-16.engr.usu.edu
+vlsi-17.engr.usu.edu
+vlsi-18.engr.usu.edu
+vlsi-19.engr.usu.edu
+vlsi-20.engr.usu.edu
+vlsi-21.engr.usu.edu
+vlsi-22.engr.usu.edu
+vlsi-23.engr.usu.edu
+vlsi-24.engr.usu.edu
+vlsi-25.engr.usu.edu
+vlsi-26.engr.usu.edu
+vlsi-27.engr.usu.edu
+vlsi-28.engr.usu.edu
+vlsi-29.engr.usu.edu
+vlsi-30.engr.usu.edu
+vlsi-67.engr.usu.edu
+Curses, you've found the secret phase!
+But finding it and solving it are quite different...
+Congratulations! You've defused the bomb!
+Your instructor has been notified and will verify your solution.
+Your instructor has been notified.
+So you think you can stop the bomb with ctrl-c, do you?
+Fall2015
