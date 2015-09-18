@@ -3,4 +3,5 @@ break explode_bomb
     kill
     quit
   end
-break phase_2
+break phase_3
+break *0x0000000000401120
