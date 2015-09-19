@@ -3,4 +3,11 @@ break explode_bomb
     kill
     quit
   end
-break phase_2
+break phase_4
+disable
+break *0x4010d3
+disable
+break *0x4010e8
+  commands
+    i r
+  end

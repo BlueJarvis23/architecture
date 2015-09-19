@@ -20,3 +20,37 @@ Phase_1:
         (gdb) x/1sb 0x401b88
         0x401b88:   "Verbosity leads to unclear, inarticulate things."
         
+Phase_2
+    After an accidental explosion of a bomb ('dis' will disable all breakpoints) I found that read_six_numbers just checked input from for 6 integers
+        separated by a space character. If input is of this form then I arrived at instruction 0x4011d8. 
+
+              0x00000000004011d6 <+40>:    mov    (%rbx),%eax
+           => 0x00000000004011d8 <+42>:    cmp    0xc(%rbx),%eax
+              0x00000000004011db <+45>:    je     0x4011e2 <phase_2+52>
+              0x00000000004011dd <+47>:    callq  0x40153e <explode_bomb>
+
+        This part is in a loop that looks at all of the numbers comparing them with the number contained in the address in rbx+0xc.
+
+        (gdb) x $rbx +0xc 
+        0x7fffffffde64: 0x00000005
+
+        By some trial and error it was found that the sequence needed to be '3 4 5 3 4 5'
+
+Phase_3
+    After phase_2 and understanding that the instruction 'callq  0x400b28 <__isoc99_sscanf@plt>' checked for the correct number of terms to be input
+        as the phase response, I learned that the sscanf function placed a value in $rax that corresponded with the number of integers found.
+        This value is then compared with one less than the expected value from the function.
+
+        0x0000000000401111 <+24>:    callq  0x400b28 <__isoc99_sscanf@plt>
+        0x0000000000401116 <+29>:    cmp    $0x1,%eax
+
+        In the case of phase_3 the input needed is 2 numbers. After an input of 2 numbers the address 0x401120 can be reached.        
+
+        It was noticed that as address 0x40112b was a switch statement. Upon examination of the jumpTable we notice that only input of zero added
+            0x386 to our value. This number then went through a series of adds and subtracts and comparted itself equal to the the second input.
+            After the adds and subtracks the value left is 348. This was then used as our second input.
+
+        0 348
+
+Phase_4
+    
