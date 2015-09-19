@@ -53,4 +53,40 @@ Phase_3
         0 348
 
 Phase_4
+    We noticed that phase_4 was calling a func4. func4 we noticed was a recursive function that computed the fibonacci sequence. This basic ideas if 
+        shown in the below python code.
+
+        def fib(x):
+            if x == 1:
+                return 1
+            elif x == 0: 
+                return 0
+            return fib(x-1) + fib(x-2)
+
+        Next we found what number phase_4 wanted us to recieve from func4 and found that we needed to put in a 22 to get the result that was needed.
+
+Phase_5
+    This phase wanted a string that 6 characters in length. The characters were then masked to use only the first 4 bits (lease significant) as a key 
+        to an array with mapped values 1 - 16. The six mapped values needed to add up to 0x3e = 62. When we first started the six character string 
+        we used was dallin. This gave us a result of 66. This was close enough to get us started and by looking at the array we found out that if 
+        we changed dallin to mallin we would get the correct result.
+
+        (gdb) x/16xw 0x401c00
+        0x401c00 <array.3294>:  0x00000002      0x0000000a      0x00000006      0x00000001
+        0x401c10 <array.3294+16>:       0x0000000c      0x00000010      0x00000009      0x00000003
+        0x401c20 <array.3294+32>:       0x00000004      0x00000007      0x0000000e      0x00000005
+        0x401c30 <array.3294+48>:       0x0000000b      0x00000008      0x0000000f      0x0000000d
+
+Phase_6
+    In phase_6 the strtol function is used which takes a number in string from and turns it into a number in number form. This value is then put in 
+        $rax. The number input is moved to 0x602e30. There are 10 nodes starting at address 0x602e30. Each node consists of 16 bytes. Therefore 
+        node0 is at address 0x602e30 and node1 is at address 0x0x602e20 ... Nodes are looking to be kindof like a linked list. node has long value 
+        in lower half and address of next node in upper half. 
+
+        Some how the compliler knows that 'mov    0x8(%r8),%rdx' moves the address by 16 bytes. It must know that the offset is halfwords.
+
+        We found that fun6 was doing lots of weird stuff ordering the linked list very strangely. At the end it compares our value we input to 
+        0x12f=303. We put this value in and it worked.
+
+Secret_Phase
     
