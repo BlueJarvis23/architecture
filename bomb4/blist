@@ -3,5 +3,6 @@ break explode_bomb
     kill
     quit
   end
-break *0x4014f9
-break *0x4014ef
+break secret_phase
+break fun7
+break *0x401013

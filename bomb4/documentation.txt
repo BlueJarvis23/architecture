@@ -89,4 +89,5 @@ Phase_6
         0x12f=303. We put this value in and it worked.
 
 Secret_Phase
-    
+    We found out that by adding an argument to input 4 we could get into the secret_phase. fun7 is a binary search tree filled with numbers. 
+        Depending on right and left we can get different values. 47 was our magic number.    
