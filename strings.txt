@@ -1,0 +1,88 @@
+/lib/ld-linux.so.2
+z9!4
+__gmon_start__
+libc.so.6
+_IO_stdin_used
+cuserid
+strcpy
+exit
+sprintf
+srand
+fopen
+__strdup
+signal
+puts
+unlink
+stdin
+mkstemp
+calloc
+memset
+getopt
+fputc
+fclose
+__ctype_b_loc
+optarg
+alarm
+system
+fwrite
+srandom
+fprintf
+fdopen
+_IO_getc
+__libc_start_main
+GLIBC_2.3
+GLIBC_2.1
+GLIBC_2.0
+PTRh`
+/tmp
+/sub
+mitX
+XXXXf
+nobo
+[^_]
+[^_]
+Usage: %s -t team [-n] [-s] [-h]
+	-s :       Submit solution via email
+	-h :       Print help information
+Oops!: You executed an illegal instruction
+Dead!: getbuf didn't complete within %d seconds
+Ouch!: You caused a segmentation fault!
+Crash!: You caused a bus error!
+No team indicated.  Results not validated
+Invalid level.  Results not validated
+Improper call to validate function.  Results not validated
+Error:  Couldn't open file for mail composition
+BUFBOMB-%d-KEY:%s:%d:%x:%s:%d
+Sent validation information to grading server
+Error: Unable to send validation information to grading server
+Valid solution, but must use -s switch to submit result to grading server
+Bang!: You set global_value to 0x%x
+Misfire: You called fizz(0x%x)
+Sabotaged!: the stack has been corrupted
+KABOOM!: getbufn returned 0x%x
+You must include a team name with -t
+	-t team:   Specify team name
+	-n :       Nitro mode
+Better luck next time
+Keep going
+VALID
+Subject: Bomb notification
+Mail from %s
+vlsi-59.engr.usu.edu
+bomb
+/usr/sbin/sendmail -bm
+cat %s | %s %s@%s 
+NICE JOB!
+Misfire: global_value = 0x%x
+Fizz!: You called fizz(0x%x)
+Smoke!: You called smoke()
+Dud: getbufn returned 0x%x
+Boom!: getbuf returned 0x%x
+Dud: getbuf returned 0x%x
+Type Hex string:
+Type string:
+Team: %s
+Cookie: 0x%x
+Can't open file: %s
+snhgt:
+0123456789ABCDEF
