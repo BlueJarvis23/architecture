@@ -1,0 +1,63 @@
+dallin@Jarvis:~/sync/fall2015/architecture_5720/labs/lab03_buflab> cat candle.txt | ./sendstring | ./bufbomb -t DMarshall
+Team: DMarshall
+Cookie: 0x20eaf407
+Type string:Smoke!: You called smoke()
+NICE JOB!
+Sent validation information to grading server
+dallin@Jarvis:~/sync/fall2015/architecture_5720/labs/lab03_buflab> cat firecracker.txt | ./sendstring | ./bufbomb -t DMarshall
+Team: DMarshall
+Cookie: 0x20eaf407
+Type string:Ouch!: You caused a segmentation fault!
+Better luck next time
+
+dallin@Jarvis:~/sync/fall2015/architecture_5720/labs/lab03_buflab> cat firecracker.txt | ./sendstring > firecracker_exploit.txt
+
+dallin@Jarvis:~/sync/fall2015/architecture_5720/labs/lab03_buflab> ./bufbomb -t DMarshall < firecracker_exploit.txt 
+Team: DMarshall
+Cookie: 0x20eaf407
+Type string:Ouch!: You caused a segmentation fault!
+Better luck next time
+
+dallin@Jarvis:~/sync/fall2015/architecture_5720/labs/lab03_buflab> gdb bufbomb
+GNU gdb (GDB; openSUSE 13.2) 7.8
+Copyright (C) 2014 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-suse-linux".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://bugs.opensuse.org/>.
+Find the GDB manual and other documentation resources online at:
+<http://www.gnu.org/software/gdb/documentation/>.
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+
+warning: /etc/gdbinit.d/gdb-heap.py: No such file or directory
+Reading symbols from bufbomb...(no debugging symbols found)...done.
+(gdb) source blist
+Breakpoint 1 at 0x80490b6
+Breakpoint 2 at 0x80490c1
+(gdb) c
+The program is not being run.
+(gdb) r -t DMarshall < firecracker_exploit.txt 
+Starting program: /home/dallin/sync/fall2015/architecture_5720/labs/lab03_buflab/bufbomb -t DMarshall < firecracker_exploit.txt
+Got object file from memory but can't read symbols: File truncated.
+Missing separate debuginfos, use: zypper install glibc-32bit-debuginfo-2.19-16.15.1.x86_64
+Team: DMarshall
+Cookie: 0x20eaf407
+
+Breakpoint 1, 0x080490b6 in getbuf ()
+(gdb) c
+Continuing.
+
+Breakpoint 2, 0x080490c1 in getbuf ()
+(gdb) c
+Continuing.
+Type string:Bang!: You set global_value to 0x20eaf407
+Detaching after fork from child process 4720.
+NICE JOB!
+Sent validation information to grading server
+[Inferior 1 (process 4716) exited normally]
+(gdb) q
