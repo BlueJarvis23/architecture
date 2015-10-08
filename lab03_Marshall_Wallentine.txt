@@ -1,0 +1,15 @@
+Dallin Marshall -- Alex Wallentine -- Cookie: 0x20eaf407
+Buffer Lab -- ECE 5720
+
+Candle:
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 60 8e 04 08
+
+Sparkler:
+00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 8e 04 08 ff ff ff ff 07 f4 ea 20
+
+Firecracker:
+c7 05 dc a1 04 08 07 f4 ea 20 68 a0 8d 04 08 c3 00 00 00 00 00 00 00 00 24 b9 ff ff
+
+Dynamite:
+b8 07 f4 ea 20 68 ec 90 04 08 c3 00 00 00 00 00 00 00 00 00 68 b9 ff ff 24 b9 ff ff
+
