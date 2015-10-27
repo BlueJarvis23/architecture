@@ -1,0 +1,68 @@
+# DMarshall - A01073629
+# AWallentine - A01107224
+
+.align 4
+init:
+    irmovl Stack, %esp
+    irmovl Stack, %ebp
+    call main
+    halt
+
+main:
+    pushl %ebp
+    rrmovl %esp,%ebp
+    irmovl $0x3, %eax
+    pushl %eax
+    irmovl dest, %eax
+    pushl %eax
+    irmovl src, %eax
+    pushl %eax
+    call copy_block
+    ret
+
+copy_block:
+    pushl %ebp
+    rrmovl %esp, %ebp
+    irmovl $0x0, %eax
+    mrmovl 8(%ebp), %ebx #source
+    mrmovl 12(%ebp), %ecx #dest
+    mrmovl 16(%ebp), %edx #length
+    irmovl $0x0, %edi # comparison
+copy_block_int:
+    pushl %edx
+    subl %edi, %edx
+    popl %edx
+    je copy_block_finish
+    mrmovl (%ebx), %esi
+    xorl %esi, %eax
+    rmmovl %esi, (%ecx)
+    pushl %eax
+    irmovl $0x4, %eax
+    addl %eax, %ebx
+    addl %eax, %ecx
+    popl %eax
+    pushl %eax
+    irmovl $0x1, %eax
+    subl %eax, %edx
+    popl %eax
+    jmp copy_block_int 
+copy_block_finish:
+    ret
+
+# Sample Source block
+.align 4
+src:
+    .long 0x00a
+    .long 0x0b0
+    .long 0xc00
+
+# Destination block
+dest:
+    .long 0x111
+    .long 0x222
+    .long 0x333
+
+# Allocate space for stack
+.pos 0x200
+Stack:
+

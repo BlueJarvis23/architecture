@@ -3,7 +3,7 @@
 ####################################################
 
 # Default team name and version number
-TEAM = YHan 
+TEAM = DMarshall&AWallentine 
 VERSION = 1
 
 # Where are the different parts of the lab should be copied to when they

@@ -1,0 +1,52 @@
+                      | # DMarshall - A01073629
+                      | # AWallentine - A01107224
+                      | 
+  0x000:              | init:
+  0x000: 308400020000 |     irmovl Stack, %esp
+  0x006: 308500020000 |     irmovl Stack, %ebp
+  0x00c: 8014000000   |     call main
+  0x011: 10           |     halt
+  0x014:              |     .align 4
+                      | 
+  0x014:              | main:
+  0x014: a058         |     pushl %ebp
+  0x016: 2045         |     rrmovl %esp,%ebp
+  0x018: 308060000000 |     irmovl ele1, %eax
+  0x01e: a008         |     pushl %eax
+  0x020: 308000000000 |     irmovl $0, %eax
+  0x026: 802c000000   |     call rsum_list
+  0x02b: 90           |     ret
+                      | 
+  0x02c:              | rsum_list:
+  0x02c: a058         |     pushl %ebp
+  0x02e: 2045         |     rrmovl %esp, %ebp
+  0x030: 503508000000 |     mrmovl 8(%ebp), %ebx
+  0x036: 308100000000 |     irmovl $0, %ecx
+  0x03c: a038         |     pushl %ebx
+  0x03e: 6113         |     subl %ecx, %ebx
+  0x040: b038         |     popl %ebx
+  0x042: 735c000000   |     je rsum_list_finish
+  0x047: 502300000000 |     mrmovl (%ebx), %edx
+  0x04d: 6020         |     addl %edx, %eax
+  0x04f: 503304000000 |     mrmovl 4(%ebx), %ebx
+  0x055: a038         |     pushl %ebx
+  0x057: 802c000000   |     call rsum_list
+  0x05c:              | rsum_list_finish:
+  0x05c: 90           |     ret
+                      | 
+                      | # Sample linked list
+  0x060:              | .align 4
+  0x060:              | ele1:
+  0x060: 0a000000     |     .long 0x00a
+  0x064: 68000000     |     .long ele2
+  0x068:              | ele2:
+  0x068: b0000000     |     .long 0x0b0
+  0x06c: 70000000     |     .long ele3
+  0x070:              | ele3:
+  0x070: 000c0000     |     .long 0xc00
+  0x074: 00000000     |     .long 0
+                      | 
+                      | # Allocate space for stack
+  0x200:              | .pos 0x200
+  0x200:              | Stack:
+                      | 

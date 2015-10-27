@@ -1,0 +1,71 @@
+                      | # DMarshall - A01073629
+                      | # AWallentine - A01107224
+                      | 
+  0x000:              | .align 4
+  0x000:              | init:
+  0x000: 308400020000 |     irmovl Stack, %esp
+  0x006: 308500020000 |     irmovl Stack, %ebp
+  0x00c: 8012000000   |     call main
+  0x011: 10           |     halt
+                      | 
+  0x012:              | main:
+  0x012: a058         |     pushl %ebp
+  0x014: 2045         |     rrmovl %esp,%ebp
+  0x016: 308003000000 |     irmovl $0x3, %eax
+  0x01c: a008         |     pushl %eax
+  0x01e: 30809c000000 |     irmovl dest, %eax
+  0x024: a008         |     pushl %eax
+  0x026: 308090000000 |     irmovl src, %eax
+  0x02c: a008         |     pushl %eax
+  0x02e: 8034000000   |     call copy_block
+  0x033: 90           |     ret
+                      | 
+  0x034:              | copy_block:
+  0x034: a058         |     pushl %ebp
+  0x036: 2045         |     rrmovl %esp, %ebp
+  0x038: 308000000000 |     irmovl $0x0, %eax
+  0x03e: 503508000000 |     mrmovl 8(%ebp), %ebx #source
+  0x044: 50150c000000 |     mrmovl 12(%ebp), %ecx #dest
+  0x04a: 502510000000 |     mrmovl 16(%ebp), %edx #length
+  0x050: 308700000000 |     irmovl $0x0, %edi # comparison
+  0x056:              | copy_block_int:
+  0x056: a028         |     pushl %edx
+  0x058: 6172         |     subl %edi, %edx
+  0x05a: b028         |     popl %edx
+  0x05c: 738e000000   |     je copy_block_finish
+  0x061: 506300000000 |     mrmovl (%ebx), %esi
+  0x067: 6360         |     xorl %esi, %eax
+  0x069: 406100000000 |     rmmovl %esi, (%ecx)
+  0x06f: a008         |     pushl %eax
+  0x071: 308004000000 |     irmovl $0x4, %eax
+  0x077: 6003         |     addl %eax, %ebx
+  0x079: 6001         |     addl %eax, %ecx
+  0x07b: b008         |     popl %eax
+                      |     #mrmovl 0x4(%ebx), %ebx
+                      |     #halt
+                      |     #mrmovl 0x4(%ecx), %ecx
+  0x07d: a008         |     pushl %eax
+  0x07f: 308001000000 |     irmovl $0x1, %eax
+  0x085: 6102         |     subl %eax, %edx
+  0x087: b008         |     popl %eax
+  0x089: 7056000000   |     jmp copy_block_int 
+  0x08e:              | copy_block_finish:
+  0x08e: 90           |     ret
+                      | 
+                      | # Sample Source block
+  0x090:              | .align 4
+  0x090:              | src:
+  0x090: 0a000000     |     .long 0x00a
+  0x094: b0000000     |     .long 0x0b0
+  0x098: 000c0000     |     .long 0xc00
+                      | 
+                      | # Destination block
+  0x09c:              | dest:
+  0x09c: 11010000     |     .long 0x111
+  0x0a0: 22020000     |     .long 0x222
+  0x0a4: 33030000     |     .long 0x333
+                      | 
+                      | # Allocate space for stack
+  0x200:              | .pos 0x200
+  0x200:              | Stack:
+                      | 
