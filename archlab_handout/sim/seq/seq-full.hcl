@@ -1,6 +1,40 @@
 ## DMarshall - A01073629
 ## AWallentine - A01107224
 #
+# IADDL DESCRIPTION
+#   FETCH:
+#       M1[PC] --> Icode:Ifun
+#       M1[PC+1] --> rA:rB
+#       M4[PC+2] --> valC
+#       PC+6 --> valP
+#   DECODE:
+#       R[rB} --> valB
+#   EXECUTE:
+#       valB+valC --> valE
+#   MEMORY:
+#   WRITE BACK: 
+#       valE --> R[rB]
+#   PC UPDATE:
+#       valP --> PC
+#
+#
+# LEAVE DESCRIPTION
+#   FETCH:
+#       M1[PC] --> Icode:Ifun
+#       PC+1 --> valP
+#   DECODE:
+#       R[%esp} --> valA
+#       R[%ebp} --> valB
+#   EXECUTE:
+#       valB+4 --> valE
+#   MEMORY:
+#       M4[valB] --> valM
+#   WRITE BACK: 
+#       valE --> R[%esp]
+#       valM --> R[%ebp]
+#   PC UPDATE:
+#       valP --> PC
+#
 #/* $begin seq-all-hcl */
 #/* $begin seq-plus-all-hcl */
 ####################################################################
