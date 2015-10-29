@@ -130,15 +130,15 @@ int f_pc = [
 # Does fetched instruction require a regid byte?
 bool need_regids =
 	f_icode in { IRRMOVL, IOPL, IPUSHL, IPOPL, 
-		     IIRMOVL, IRMMOVL, IMRMOVL };
+		     IIRMOVL, IRMMOVL, IMRMOVL, IIADDL };
 
 # Does fetched instruction require a constant word?
 bool need_valC =
-	f_icode in { IIRMOVL, IRMMOVL, IMRMOVL, IJXX, ICALL };
+	f_icode in { IIRMOVL, IRMMOVL, IMRMOVL, IJXX, ICALL, IIADDL };
 
 bool instr_valid = f_icode in 
 	{ INOP, IHALT, IRRMOVL, IIRMOVL, IRMMOVL, IMRMOVL,
-	       IOPL, IJXX, ICALL, IRET, IPUSHL, IPOPL };
+	       IOPL, IJXX, ICALL, IRET, IPUSHL, IPOPL, IIADDL };
 
 # Predict next value of PC
 int new_F_predPC = [
@@ -159,14 +159,14 @@ int new_E_srcA = [
 
 ## What register should be used as the B source?
 int new_E_srcB = [
-	D_icode in { IOPL, IRMMOVL, IMRMOVL  } : D_rB;
+	D_icode in { IOPL, IRMMOVL, IMRMOVL, IIADDL  } : D_rB;
 	D_icode in { IPUSHL, IPOPL, ICALL, IRET } : RESP;
 	1 : RNONE;  # Don't need register
 ];
 
 ## What register should be used as the E destination?
 int new_E_dstE = [
-	D_icode in { IRRMOVL, IIRMOVL, IOPL} : D_rB;
+	D_icode in { IRRMOVL, IIRMOVL, IOPL, IIADDL} : D_rB;
 	D_icode in { IPUSHL, IPOPL, ICALL, IRET } : RESP;
 	1 : RNONE;  # Don't need register
 ];
@@ -203,7 +203,7 @@ int new_E_valB = [
 ## Select input A to ALU
 int aluA = [
 	E_icode in { IRRMOVL, IOPL } : E_valA;
-	E_icode in { IIRMOVL, IRMMOVL, IMRMOVL } : E_valC;
+	E_icode in { IIRMOVL, IRMMOVL, IMRMOVL, IIADDL } : E_valC;
 	E_icode in { ICALL, IPUSHL } : -4;
 	E_icode in { IRET, IPOPL } : 4;
 	# Other instructions don't need ALU
@@ -212,7 +212,7 @@ int aluA = [
 ## Select input B to ALU
 int aluB = [
 	E_icode in { IRMMOVL, IMRMOVL, IOPL, ICALL, 
-		      IPUSHL, IRET, IPOPL } : E_valB;
+		      IPUSHL, IRET, IPOPL, IIADDL } : E_valB;
 	E_icode in { IRRMOVL, IIRMOVL } : 0;
 	# Other instructions don't need ALU
 ];
@@ -224,7 +224,8 @@ int alufun = [
 ];
 
 ## Should the condition codes be updated?
-bool set_cc = E_icode == IOPL;
+######bool set_cc = E_icode == IOPL;
+bool set_cc = E_icode in {IOPL, IIADDL};
 
 
 ################ Memory Stage ######################################

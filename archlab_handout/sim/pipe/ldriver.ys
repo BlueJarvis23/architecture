@@ -25,7 +25,8 @@ main:	irmovl Stack, %esp  	# Set up stack pointer
 #
 ##################################################################
 	# Function prologue. Do not modify.
-ncopy:	pushl %ebp		# Save old frame pointer
+ncopy:	
+    pushl %ebp		# Save old frame pointer
 	rrmovl %esp,%ebp	# Set up new frame pointer
 	pushl %esi		# Save callee-save regs
 	pushl %ebx
@@ -39,22 +40,29 @@ ncopy:	pushl %ebp		# Save old frame pointer
 	jle Done		# if so, goto Done:
 
 	# Loop body.
-Loop:	mrmovl (%ebx), %eax	# read val from src...
+Loop:	
+    mrmovl (%ebx), %eax	# read val from src...
 	rmmovl %eax, (%ecx)	# ...and store it to dst
 	andl %eax, %eax		# val <= 0?
 	jle Npos		# if so, goto Npos:
-	irmovl $1, %edi
-	addl %edi, %esi		# count++
-Npos:	irmovl $1, %edi
-	subl %edi, %edx		# len--
-	irmovl $4, %edi
-	addl %edi, %ebx		# src++
-	addl %edi, %ecx		# dst++
+	#irmovl $1, %edi
+	#addl %edi, %esi		# count++
+	iaddl $1, %esi
+Npos:	
+    #irmovl $1, %edi
+	#subl %edi, %edx		# len--
+	iaddl $-1, %edx
+	#irmovl $4, %edi
+	#addl %edi, %ebx		# src++
+	#addl %edi, %ecx		# dst++
+	iaddl $4, %ebx
+	iaddl $4, %ecx
 	andl %edx,%edx		# len > 0?
 	jg Loop			# if so, goto Loop:
 
 	# Function epilogue. Do not modify.
-Done:	rrmovl %esi, %eax
+Done:	
+    rrmovl %esi, %eax
 	popl %ebx
 	popl %esi
 	rrmovl %ebp, %esp

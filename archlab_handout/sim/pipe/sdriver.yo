@@ -25,7 +25,8 @@
                       | #
                       | ##################################################################
                       | 	# Function prologue. Do not modify.
-  0x02a: a058         | ncopy:	pushl %ebp		# Save old frame pointer
+  0x02a:              | ncopy:	
+  0x02a: a058         |     pushl %ebp		# Save old frame pointer
   0x02c: 2045         | 	rrmovl %esp,%ebp	# Set up new frame pointer
   0x02e: a068         | 	pushl %esi		# Save callee-save regs
   0x030: a038         | 	pushl %ebx
@@ -36,30 +37,37 @@
                       | 	# Loop header
   0x044: 6366         | 	xorl %esi,%esi		# count = 0;
   0x046: 6222         | 	andl %edx,%edx		# len <= 0?
-  0x048: 7181000000   | 	jle Done		# if so, goto Done:
+  0x048: 717f000000   | 	jle Done		# if so, goto Done:
                       | 
                       | 	# Loop body.
-  0x04d: 500300000000 | Loop:	mrmovl (%ebx), %eax	# read val from src...
+  0x04d:              | Loop:	
+  0x04d: 500300000000 |     mrmovl (%ebx), %eax	# read val from src...
   0x053: 400100000000 | 	rmmovl %eax, (%ecx)	# ...and store it to dst
   0x059: 6200         | 	andl %eax, %eax		# val <= 0?
-  0x05b: 7168000000   | 	jle Npos		# if so, goto Npos:
-  0x060: 308701000000 | 	irmovl $1, %edi
-  0x066: 6076         | 	addl %edi, %esi		# count++
-  0x068: 308701000000 | Npos:	irmovl $1, %edi
-  0x06e: 6172         | 	subl %edi, %edx		# len--
-  0x070: 308704000000 | 	irmovl $4, %edi
-  0x076: 6073         | 	addl %edi, %ebx		# src++
-  0x078: 6071         | 	addl %edi, %ecx		# dst++
-  0x07a: 6222         | 	andl %edx,%edx		# len > 0?
-  0x07c: 764d000000   | 	jg Loop			# if so, goto Loop:
+  0x05b: 7166000000   | 	jle Npos		# if so, goto Npos:
+                      | 	#irmovl $1, %edi
+                      | 	#addl %edi, %esi		# count++
+  0x060: c08601000000 | 	iaddl $1, %esi
+  0x066:              | Npos:	
+                      |     #irmovl $1, %edi
+                      | 	#subl %edi, %edx		# len--
+  0x066: c082ffffffff | 	iaddl $-1, %edx
+                      | 	#irmovl $4, %edi
+                      | 	#addl %edi, %ebx		# src++
+                      | 	#addl %edi, %ecx		# dst++
+  0x06c: c08304000000 | 	iaddl $4, %ebx
+  0x072: c08104000000 | 	iaddl $4, %ecx
+  0x078: 6222         | 	andl %edx,%edx		# len > 0?
+  0x07a: 764d000000   | 	jg Loop			# if so, goto Loop:
                       | 
                       | 	# Function epilogue. Do not modify.
-  0x081: 2060         | Done:	rrmovl %esi, %eax
-  0x083: b038         | 	popl %ebx
-  0x085: b068         | 	popl %esi
-  0x087: 2054         | 	rrmovl %ebp, %esp
-  0x089: b058         | 	popl %ebp
-  0x08b: 90           | 	ret
+  0x07f:              | Done:	
+  0x07f: 2060         |     rrmovl %esi, %eax
+  0x081: b038         | 	popl %ebx
+  0x083: b068         | 	popl %esi
+  0x085: 2054         | 	rrmovl %ebp, %esp
+  0x087: b058         | 	popl %ebp
+  0x089: 90           | 	ret
                       | #/* $end ncopy-ys */
                       | #################################################################### 
                       | # Epilogue code for the correctness testing driver
