@@ -9,6 +9,13 @@
 #
 ##################################################################
 	# Function prologue. Do not modify.
+	#
+	#Idea -- mmmovl
+	#Idea -- use register as ofset
+	#Idea -- rmmovl_4
+	#Idea -- reverse condition in while so that len counts up
+	#   and use len as in address computations index. (mem, len, 4)
+	#
 ncopy:	
     pushl %ebp		# Save old frame pointer
 	rrmovl %esp,%ebp	# Set up new frame pointer
@@ -20,19 +27,21 @@ ncopy:
 
 	# Loop header
 	xorl %esi,%esi		# count = 0;
-	andl %edx,%edx		# len <= 0?
-	jle Done		# if so, goto Done:
+	#andl %edx,%edx		# len <= 0?
+	#jle Done		# if so, goto Done:
+	jmp Middle
 
 	# Loop body.
 Loop:	
-    mrmovl (%ebx), %eax	# read val from src...
+    #mrmovl (%ebx), %eax	# read val from src...
 	rmmovl %eax, (%ecx)	# ...and store it to dst
 	andl %eax, %eax		# val <= 0?
-	jle Npos		# if so, goto Npos:
+	jg Ppos		# if so, goto Npos:
 	#irmovl $1, %edi
 	#addl %edi, %esi		# count++
+	iaddl $-1, %esi
+Ppos:	
 	iaddl $1, %esi
-Npos:	
     #irmovl $1, %edi
 	#subl %edi, %edx		# len--
 	iaddl $-1, %edx
@@ -41,7 +50,9 @@ Npos:
 	#addl %edi, %ecx		# dst++
 	iaddl $4, %ebx
 	iaddl $4, %ecx
+Middle:
 	andl %edx,%edx		# len > 0?
+    mrmovl (%ebx), %eax	# read val from src...
 	jg Loop			# if so, goto Loop:
 
 	# Function epilogue. Do not modify.
