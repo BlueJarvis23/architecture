@@ -1,0 +1,50 @@
+# DMarshall - A01073629
+# AWallentine - A01107224
+
+init:
+    irmovl Stack, %esp
+    irmovl Stack, %ebp
+    call main
+    halt
+    .align 4
+
+main:
+    pushl %ebp
+    rrmovl %esp,%ebp
+    irmovl ele1, %eax
+    pushl %eax
+    call sum_list
+    ret
+
+sum_list:
+    pushl %ebp
+    rrmovl %esp, %ebp
+    mrmovl 8(%ebp), %ebx
+    irmovl $0, %eax
+    irmovl $0, %ecx
+sum_list_int:
+    mrmovl (%ebx), %edx
+    addl %edx, %eax
+    mrmovl 4(%ebx), %ebx
+    pushl %ebx
+    subl %ecx, %ebx
+    popl %ebx
+    jne sum_list_int
+    ret
+
+# Sample linked list
+.align 4
+ele1:
+    .long 0x00a
+    .long ele2
+ele2:
+    .long 0x0b0
+    .long ele3
+ele3:
+    .long 0xc00
+    .long 0
+
+# Allocate space for stack
+.pos 0x200
+Stack:
+

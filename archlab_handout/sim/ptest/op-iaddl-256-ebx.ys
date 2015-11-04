@@ -1,8 +1,0 @@
-	    irmovl $256, %ebx
-	    nop
-	    nop
-	    nop
-            iaddl $-32, %ebx
-	    nop
-	    nop
-	    halt
