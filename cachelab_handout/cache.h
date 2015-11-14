@@ -13,7 +13,7 @@
 
 typedef struct {
     int B;
-    char valid;
+    unsigned int valid;
     uint64_t tag;
     char * data;
 } cache_block;
@@ -69,15 +69,25 @@ void cache_inc_eviction(cache_set * cache_ptr){
     cache_ptr->eviction_count++;
 }
 
+cache_block * get_last_used(cache_line * cache_line){
+    int i;
+    unsigned int v_temp = ~0x0;
+    cache_block * lru = NULL;
+    for(i=0;i<cache_line->E;++i){
+        if(cache_line->line[i].valid < v_temp){
+            v_temp = cache_line->line[i].valid;
+            lru = &cache_line->line[i];
+        }
+    }
+    return lru;
+}
+
 void cache_add_value(cache_set * cache_ptr, uint64_t tag, int set, int block){
-    //if(cache_ptr->set[set].E > 1){
-    //  
-    //    
-    //}else{
-    if (!(cache_ptr->set[set].line[0].tag == -1))
+    cache_block * cache_lru = get_last_used(&cache_ptr->set[set]);
+    if(!(cache_lru->tag == -1))
         cache_inc_eviction(cache_ptr);
-    cache_ptr->set[set].line[0].tag = tag;
-    //}
+    cache_lru->tag = tag;
+    cache_lru->valid = cache_ptr->line_num;
 }
 
 void check_cache(cache_set * cache_ptr, char op, uint64_t tag, int set, int block, int size){
@@ -87,15 +97,18 @@ void check_cache(cache_set * cache_ptr, char op, uint64_t tag, int set, int bloc
             switch(op){
                 case 'L':
                     cache_inc_hit(cache_ptr);
+                    cache_ptr->set[set].line[i].valid = cache_ptr->line_num;
                     return;
                     break;
                 case 'S':
                     cache_inc_hit(cache_ptr);
+                    cache_ptr->set[set].line[i].valid = cache_ptr->line_num;
                     return;
                     break;
                 case 'M':
                     cache_inc_hit(cache_ptr);
                     cache_inc_hit(cache_ptr);
+                    cache_ptr->set[set].line[i].valid = cache_ptr->line_num;
                     return;
                     break;
             }
@@ -124,11 +137,16 @@ void add_cache_entry(cache_set * cache_ptr, char op, uint64_t address, int size)
     int block = (address << (64 - (cache_ptr->b))) >> (64 - (cache_ptr->b));
     //printf("tag: %" PRIx64 ", set: %d, block: %d\n", tag, set, block);
     
-    unsigned int j = ~0x0;
-    unsigned int max_block = ((j << (unsigned int)(32 - cache_ptr->b)) >> (unsigned int)(32 - cache_ptr->b));
-    if((block + size - 1) > max_block){
-        check_cache(cache_ptr, op, tag, set + 1, 0, (block+size)-max_block);
-    }
+    //unsigned int j = ~0x0;
+    //unsigned int max_block = ((j << (unsigned int)(32 - cache_ptr->b)) >> (unsigned int)(32 - cache_ptr->b));
+    //if((block + size - 1) > max_block){
+    //    if (set+1 > cache_ptr->S - 1){
+    //        check_cache(cache_ptr, op, tag + 1, 0, 0, (block+size)-max_block);
+    //         
+    //    }else{
+    //        check_cache(cache_ptr, op, tag, set + 1, 0, (block+size)-max_block);
+    //    }
+    //}
 
     check_cache(cache_ptr, op, tag, set, block, size);
 }
