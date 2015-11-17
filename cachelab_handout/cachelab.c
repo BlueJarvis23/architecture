@@ -64,14 +64,11 @@ void correctTrans(int M, int N, int A[N][M], int B[M][N])
     }    
 }
 
-
-
 /* 
  * registerTransFunction - Add the given trans function into your list
  *     of functions to be tested
  */
-void registerTransFunction(void (*trans)(int M, int N, int[N][M], int[M][N]), 
-                           char* desc)
+void registerTransFunction(void (*trans)(int M, int N, int[N][M], int[M][N]), char* desc)
 {
     func_list[func_counter].func_ptr = trans;
     func_list[func_counter].description = desc;
@@ -79,5 +76,6 @@ void registerTransFunction(void (*trans)(int M, int N, int[N][M], int[M][N]),
     func_list[func_counter].num_hits = 0;
     func_list[func_counter].num_misses = 0;
     func_list[func_counter].num_evictions =0;
-    func_counter++;
+func_counter++;
 }
+
