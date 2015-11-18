@@ -28,7 +28,7 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N])
     int i, j, k, l;
     int tmp=0;
     int tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7;
-    if( M == 32 && N == 32 ){ // Blocked Matrix Transpose -- 8 because b of cache is 5, 32 bytes = 8 ints
+    if( M == 32 && N == 32 ){ // Blocked Matrix Transpose -- 8 because b of cache is 5, 32 bytes = 8 ints -- diagonal optimization
         for (i = 0; i < N; i+=8) {
             for (j = 0; j < M; j+=8) {
                 for(k = i; k < i + 8; ++k){
@@ -57,9 +57,9 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N])
                         tmp7 = A[j+k][i+7];
                     }
                     B[i][j+k] = tmp;
-                    B[i][j+k+64] = tmp1;
-                    B[i][j+k+128] = tmp2;
-                    B[i][j+k+192] = tmp3;
+                    B[i][j+k+(1*M)] = tmp1;
+                    B[i][j+k+(2*M)] = tmp2;
+                    B[i][j+k+(3*M)] = tmp3;
                 }
                 for(k=7; k>0; --k){
                     tmp = A[j+k][i+4];
@@ -67,20 +67,20 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N])
                     tmp2 = A[j+k][i+4+2];
                     tmp3 = A[j+k][i+4+3];
                     B[i+4][j+k] = tmp;
-                    B[i+4][j+k+64] = tmp1;
-                    B[i+4][j+k+128] = tmp2;
-                    B[i+4][j+k+192] = tmp3;
+                    B[i+4][j+k+(1*M)] = tmp1;
+                    B[i+4][j+k+(2*M)] = tmp2;
+                    B[i+4][j+k+(3*M)] = tmp3;
                 }
                 B[i+4][j] = tmp4;
-                B[i+4][j+64] = tmp5;
-                B[i+4][j+128] = tmp6;
-                B[i+4][j+192] = tmp7;
+                B[i+4][j+(1*M)] = tmp5;
+                B[i+4][j+(2*M)] = tmp6;
+                B[i+4][j+(3*M)] = tmp7;
             }
-        }    
+        }   
     }
 
     if( M == 61 && N==67 ){
-        for (i = 0; i < N; i+=8) {
+        for (i = 0; i < N; i+=8) { // Block Transpose Row-wise Scan
             for (j = 0; j < M; j+=8) {
                 for(k = j; k < j + 8 && k < M; ++k){
                     for(l = i; l < i + 8 && l < N; ++l){
@@ -131,9 +131,9 @@ void trans_64(int M, int N, int A[N][M], int B[M][N]){
                     tmp7 = A[j+k][i+7];
                 }
                 B[i][j+k] = tmp;
-                B[i][j+k+64] = tmp1;
-                B[i][j+k+128] = tmp2;
-                B[i][j+k+192] = tmp3;
+                B[i][j+k+(1*M)] = tmp1;
+                B[i][j+k+(2*M)] = tmp2;
+                B[i][j+k+(3*M)] = tmp3;
             }
             for(k=7; k>0; --k){
                 tmp = A[j+k][i+4];
@@ -141,16 +141,16 @@ void trans_64(int M, int N, int A[N][M], int B[M][N]){
                 tmp2 = A[j+k][i+4+2];
                 tmp3 = A[j+k][i+4+3];
                 B[i+4][j+k] = tmp;
-                B[i+4][j+k+64] = tmp1;
-                B[i+4][j+k+128] = tmp2;
-                B[i+4][j+k+192] = tmp3;
+                B[i+4][j+k+(1*M)] = tmp1;
+                B[i+4][j+k+(2*M)] = tmp2;
+                B[i+4][j+k+(3*M)] = tmp3;
             }
             B[i+4][j] = tmp4;
-            B[i+4][j+64] = tmp5;
-            B[i+4][j+128] = tmp6;
-            B[i+4][j+192] = tmp7;
+            B[i+4][j+(1*M)] = tmp5;
+            B[i+4][j+(2*M)] = tmp6;
+            B[i+4][j+(3*M)] = tmp7;
         }
-    }    
+    }   
 }
 
 char trans_61x67_desc[] = "Trans for 61 x 67";
