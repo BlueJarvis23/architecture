@@ -79,8 +79,6 @@ int main(int argc, char **argv)
     cache_set cache = init_cache(s, E, b);
     cache_set * cache_ptr = & cache;
 
-    //printSummary(cache.hit_count, cache.miss_count, cache.eviction_count);
-
     FILE * fp;
     char * line = NULL;
     size_t len = 0;
@@ -91,8 +89,6 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);
     
     while((read = getline(&line, &len, fp)) != -1) {
-        //printf("Retrieved line of length: %zu\n", read);
-        //printf("%s", line);
         add_line_cache(cache_ptr, line);
         //printSummary(cache.hit_count, cache.miss_count, cache.eviction_count);
     }
